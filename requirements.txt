@@ -6,4 +6,4 @@ tldextract==3.4.4
 requests==2.31.0
 beautifulsoup4==4.12.2
 transformers==4.34.0
-torch==2.0.1
+torch==2.2.0
