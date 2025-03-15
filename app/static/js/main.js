@@ -3,7 +3,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailForm = document.getElementById('emailForm');
     const uploadForm = document.getElementById('uploadForm');
     const resultsCard = document.getElementById('resultsCard');
-    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    const loadingModalElement = document.getElementById('loadingModal');
+    
+    // Initialize the modal with direct DOM manipulation instead of Bootstrap's Modal class
+    function showLoadingModal() {
+        loadingModalElement.style.display = 'block';
+        loadingModalElement.classList.add('show');
+        document.body.classList.add('modal-open');
+        
+        // Create backdrop if it doesn't exist
+        if (!document.querySelector('.modal-backdrop')) {
+            const backdrop = document.createElement('div');
+            backdrop.classList.add('modal-backdrop', 'show');
+            document.body.appendChild(backdrop);
+        }
+    }
+    
+    function hideLoadingModal() {
+        loadingModalElement.style.display = 'none';
+        loadingModalElement.classList.remove('show');
+        document.body.classList.remove('modal-open');
+        
+        // Remove backdrop
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach(backdrop => {
+            backdrop.parentNode.removeChild(backdrop);
+        });
+    }
     
     // Add event listener for email form submission
     emailForm.addEventListener('submit', function(e) {
@@ -29,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Show loading modal
-        loadingModal.show();
+        showLoadingModal();
         
         // Prepare data for API request
         const data = {
@@ -54,13 +80,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(result => {
             // Hide loading modal
-            loadingModal.hide();
+            hideLoadingModal();
             
             // Display results
             displayResults(result);
         })
         .catch(error => {
-            loadingModal.hide();
+            hideLoadingModal();
             console.error('Error:', error);
             alert('An error occurred while analyzing the email. Please try again.');
         });
@@ -79,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const reader = new FileReader();
         
         // Show loading modal
-        loadingModal.show();
+        showLoadingModal();
         
         reader.onload = function(e) {
             const fileContent = e.target.result;
@@ -105,20 +131,20 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(result => {
                 // Hide loading modal
-                loadingModal.hide();
+                hideLoadingModal();
                 
                 // Display results
                 displayResults(result);
             })
             .catch(error => {
-                loadingModal.hide();
+                hideLoadingModal();
                 console.error('Error:', error);
                 alert('An error occurred while analyzing the email. Please try again.');
             });
         };
         
         reader.onerror = function() {
-            loadingModal.hide();
+            hideLoadingModal();
             alert('Error reading file');
         };
         
