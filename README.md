@@ -6,7 +6,8 @@ A web-based tool that leverages Natural Language Processing (NLP) techniques to 
 
 - **Email Analysis**: Upload or paste email content for immediate analysis
 - **Risk Scoring**: Get a comprehensive risk assessment with detailed breakdown
-- **Rule-Based Detection**: Utilizes heuristic rules to identify phishing indicators
+- **BERT-based Detection**: Utilizes a fine-tuned BERT model for advanced phishing detection (when available)
+- **Rule-Based Fallback**: Employs heuristic rules as a reliable fallback mechanism
 - **Sender Verification**: Analyzes sender reputation and domain information
 - **Link Analysis**: Identifies and evaluates suspicious URLs within emails
 
@@ -42,6 +43,12 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+4. (Optional) Install advanced model dependencies:
+```
+pip install transformers torch
+```
+This step enables the BERT-based phishing detection model. If these packages are not installed, the application will automatically fall back to the rule-based model.
+
 ### Running the Application
 
 You can run the application using either of the following methods:
@@ -57,7 +64,7 @@ If you encounter any issues with the standard method, you can use the simplified
 python simple_app.py
 ```
 
-4. Open your browser and navigate to:
+5. Open your browser and navigate to:
 ```
 http://localhost:5000
 ```
@@ -68,6 +75,7 @@ http://localhost:5000
 phishing-detector/
 ├── app/
 │   ├── models/         # Model implementations
+│   │   ├── model_loader.py  # Loads either BERT or rule-based model
 │   ├── static/         # Static files (CSS, JS)
 │   ├── templates/      # HTML templates
 │   ├── utils/          # Utility functions
@@ -78,6 +86,16 @@ phishing-detector/
 ├── requirements.txt    # Project dependencies
 └── README.md           # Project documentation
 ```
+
+## Detection Models
+
+The application supports two phishing detection models:
+
+1. **BERT-based Model**: A fine-tuned BERT model from HuggingFace (`ealvaradob/bert-finetuned-phishing`) that provides advanced phishing detection capabilities. This model requires the `transformers` and `torch` packages.
+
+2. **Rule-based Model**: A heuristic approach that analyzes email content for suspicious keywords, URL patterns, and urgent language. This model is used as a fallback when the BERT model is not available.
+
+The system automatically selects the best available model at runtime.
 
 ## API Endpoints
 
@@ -92,6 +110,7 @@ If you encounter any issues:
 2. Make sure your virtual environment is activated
 3. Try using the simplified application version: `python simple_app.py`
 4. If Flask installation issues occur, try: `pip install flask==2.0.3 werkzeug==2.2.3`
+5. If you encounter errors related to transformers or PyTorch, the application will automatically use the rule-based model instead
 
 ## License
 
@@ -99,5 +118,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Enron dataset for legitimate email examples
-- PhishTank for phishing email examples
+- HuggingFace for providing the pre-trained BERT model
+- The open-source community for various libraries and tools used in this project
